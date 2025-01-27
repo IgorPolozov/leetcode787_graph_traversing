@@ -293,8 +293,7 @@ int main()//for testing
 { 
     int start = 1, finish =6;
     int stops_max =2;
-    int flights_number = 4;
-    //int sities=4;//not used in algorithm, but present to fit the given by leetcode signature
+    int flights_number = 4;//not used in algorithm, but present to fit the given by leetcode signature 
     
         std::vector< std::vector<int> > flights
         {//from, to, price
