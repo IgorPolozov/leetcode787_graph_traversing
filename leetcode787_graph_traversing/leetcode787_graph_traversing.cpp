@@ -4,16 +4,14 @@
 #include <unordered_set>
 #include <stack>
 
-
 class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 {
-    using ui_t = int;
+    using ui_t = int;//I used unsigned at start and in the finish understood that it will not fit litcode signature
 
     struct node
     {
         ui_t id;
         node mutable* visited;
-
         bool operator==(const node& other)const
         {
             return id == other.id;
@@ -23,7 +21,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
             visited = const_cast<node*>(&other);
         }
 
-        void prn_visited_by(const node& other)const
+        void prn_visited_by(const node& other)const//for debug)
         {
             std::cout << "\nlist of visitors of node : " << id << "\n";
             const node* ptr_node = visited;
@@ -33,7 +31,6 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
                 ptr_node = ptr_node->visited;
             }
             std::cout << '\n';
-
         }
 
         bool is_visited_by(const node& other)const
@@ -49,11 +46,8 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
                 ptr_node = ptr_node->visited;
             }
             return result;
-        }      
-
-    };
-    
-
+        } 
+    }; 
 
     struct Hash_node
     {
@@ -66,14 +60,11 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
     struct pnode
     {
         const node* nd;
-
         bool operator==(const pnode& other)const
         {
             return *nd == *other.nd;
-        }       
-
+        } 
     };
-
     
     struct Hash_pnode
     {
@@ -89,10 +80,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
         unsigned price;
 
     };
-
-
-
-    using ui_t = int;
+    
     using vec_flight = std::vector<flight>;
     using vec_flight_iter = vec_flight::iterator;
     using vec_flight_citer = vec_flight::const_iterator;
@@ -114,10 +102,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
         node* prev_visited;
     };
 
-
-
 public:
-
     //parameter n is not necessary, because it is determined by the flights
     int findCheapestPrice(const int& n, const std::vector<std::vector<ui_t>>& flights, const int& src, const int& dst, const int& k)
     {
@@ -158,24 +143,20 @@ public:
 
         auto it_target = nodes.find(sorc);
 
-        if (it_target == nodes.end())
-        {
+        if (it_target == nodes.end()){
             //std::cout<<"Not matched source node in nodes!\n";
             return -1;
         }
 
         auto it_dest = nodes.find(dest);
-        if (it_dest == nodes.end())
-        {
+        if (it_dest == nodes.end()){
             //std::cout<<"Not matched destination node in nodes!\n";
             //std::cout<<dest<<'\n';
             return -1;
         }
-
+        
         const pnode pstart{ &*it_target };
         const pnode pdest{ &*it_dest };
-
-
         //////////init block
         mapa_iter//initialy all are equal
             it = pnodes.find(pstart);
@@ -185,8 +166,7 @@ public:
             //std::cout<<"Not matched source node in pnodes!\n";
             return -1;
         }
-
-
+        
         vec_flight_iter
             it_vec_begin = it->second.begin(),
             it_vec_end = it->second.end();
@@ -201,17 +181,13 @@ public:
             result = INT_MAX;
         node* prev_visited = nullptr;
 
-
-
         stack_args starting_args{ it_vec_begin, it_vec_end, it, sits_count, tmp, prev_visited };
 
         std::stack<stack_args> args;
         args.push(starting_args);
         //end of intit block
 
-        bool is_visited = false;//helping variable related to while(true)
-
-
+        bool is_visited = false;//helping variable related to while(true) Here and further all intermediete vars are used for clarity only
         while (true)
         {
             while (!args.empty() && (args.top().it_vec_begin == args.top().it_vec_end))//pop off all inaccessible ones
@@ -221,15 +197,12 @@ public:
             }
             //clearing args from arg(s) whos vec<flights> is finished
 
-            if (args.empty()) break;//final point
- 
+            if (args.empty()) break;//final point 
 
             auto& args_obj = args.top();//this var slightly decreases performance, but it is too useful to have clear code
 
-
             tmp = args_obj.tmp;
             sits_count = args_obj.sits_count;
-
 
             it_vec_begin = args_obj.it_vec_begin;
             if (
@@ -316,18 +289,13 @@ public:
     }
 };
 
-
 int main()//for testing
-{
-   
-
+{ 
     int start = 1, finish =6;
     int stops_max =2;
     int flights_number = 4;
-    //int sities=4;//not used in algorithm, but present to fit the given signature
-
+    //int sities=4;//not used in algorithm, but present to fit the given by leetcode signature
     
-   
         std::vector< std::vector<int> > flights
         {//from, to, price
         {1, 2, 100 }, {1, 3, 200}, {1, 5, 5}, {2, 3, 5},
@@ -335,9 +303,6 @@ int main()//for testing
         }; 
 
     int res = Solution{}.findCheapestPrice(flights_number, flights, start, finish, stops_max);
-
     std::cout << "\nmy result= " << res;//15 -> 1-5-6 = 5+10
-
     return 0;
-
 }
