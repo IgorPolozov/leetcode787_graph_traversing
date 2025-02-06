@@ -132,10 +132,14 @@ public:
             if (key_it == pnodes.end()) {
                 pnodes.insert({ pfrom, {} });
             }
-
+            
             key_it = pnodes.find(pfrom);
             flight fl{ pto, elem[2] };
             key_it->second.push_back(fl);
+        }
+        for(auto &elem:pnodes)
+        {
+          std::sort(elem.second.begin(), elem.second.end(), [](const flight &a, const flight b){return a.price<b.price;});    
         }
 
         node    sorc = { ui_t(src), 0 },
