@@ -77,7 +77,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
     struct flight
     {
         pnode pn;
-        unsigned price;
+        ui_t price;
 
     };
     
