@@ -93,9 +93,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
 
     struct stack_args
     {
-        vec_flight_iter
-            it_vec_begin,
-            it_vec_end;
+        vec_flight_iter it_vec_begin;
         mapa_iter it;
         int sits_count;
         int tmp;
@@ -194,7 +192,7 @@ public:
         bool is_visited = false;//helping variable related to while(true) Here and further all intermediete vars are used for clarity only
         while (true)
         {
-            while (!args.empty() && (args.top().it_vec_begin == args.top().it_vec_end))//pop off all inaccessible ones
+            while (!args.empty() && (args.top().it_vec_begin == args.top().it->second.end()))//pop off all inaccessible ones
             {
                 args.top().it->first.nd->visited = args.top().prev_visited;
                 args.pop();
@@ -219,7 +217,7 @@ public:
                     continue;
                 }
 
-            it_vec_end = args_obj.it_vec_end;
+            it_vec_end = args.top().it->second.end();
 
             it = args_obj.it;            
 
@@ -277,12 +275,11 @@ public:
                     //increment old it_vec_begin to go right after poping previous arg
                     ++args.top().it_vec_begin;
 
-                    vec_flight_iter new_it_vec_begin = it->second.begin(),
-                        new_it_vec_end = it->second.end();
+                    vec_flight_iter new_it_vec_begin = it->second.begin();
                     ++sits_count;//here only
                     tmp += it_vec_begin->price;//here only to save in args.
 
-                    stack_args new_arg{ new_it_vec_begin, new_it_vec_end, it, sits_count, tmp, prev_visited_to_save };
+                    stack_args new_arg{ new_it_vec_begin, it, sits_count, tmp, prev_visited_to_save };
                     args.push(new_arg);
                     continue;
                 }//end else of can go FORWARD by the reason of it!=pnodes.end()
