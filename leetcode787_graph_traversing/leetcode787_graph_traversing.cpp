@@ -96,7 +96,7 @@ class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flight
         vec_flight_iter it_vec_begin;
         mapa_iter it;
         int sits_count;
-        int tmp;
+        int tmp;//summary price which accumulates prices from source to this (current) city in node
         node* prev_visited;
     };
 
