@@ -9,3 +9,4 @@ That is why I decided to create my own algorithm. It is closely related to the c
 5. Wrap the node according to item 3 with a class pnode, storing a pointer to the node and conducting a hash function of the node class hash function of the node class.
 Everything is not very concise in the code, but it works very quickly and is not afraid of even very large graphs in terms of the number of their nodes.
 Do not look on how ugly it looks using class Solution and other things... That was the leetcode condition. There are many strange things there like already given the structure of flights, number of cities etc. I was forced to make my code to fit for their demands.
+this aproach does not work with leedcode test where some sirties are droped from enumeration from 0 to n-1. F.e. if you have 4 cities 0, 1, 3, 4 - i.e. whithout 2 this code will failed. But it is easily to fix that. :)
