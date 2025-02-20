@@ -5,7 +5,6 @@
 
 class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 {
-
 public:
     using vec_t=std::vector<int>;
     using pr_t=std::pair<int,int>;
@@ -28,8 +27,7 @@ public:
 
 int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int& src, const int& dst, const int& k)
     {
-
-        const int never_city=n;
+        const int never_city=-1;//to avoid dependense on the cities number
         std::vector<int> visitors(n, never_city);
         std::vector<vec_t> fls(flights);
         auto lmbd_compare=[](const vec_t &a, const vec_t &b){return a[0]<b[0];};
