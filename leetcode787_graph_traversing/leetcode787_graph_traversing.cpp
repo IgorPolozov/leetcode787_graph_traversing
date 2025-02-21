@@ -2,10 +2,11 @@
 #include <stack>
 #include <utility>
 #include <algorithm>
+#include <unordered_map>
 
 class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 {
-public:
+public:    
     using vec_t=std::vector<int>;
     using pr_t=std::pair<int,int>;
     using vec_pr_t=std::vector<pr_t>;
@@ -27,11 +28,42 @@ public:
 
 int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int& src, const int& dst, const int& k)
     {
+        int src_ind=src, dst_ind=dst;
+
+        std::unordered_map<int, int, std::hash<int>> cities_by_condition(n);
+
+        for(const auto &subv:flights)
+        {
+            cities_by_condition.insert({subv[0], 0} );
+            cities_by_condition.insert({subv[1], 0} );
+        }
+
+        int ind=0;
+        for(auto &el:cities_by_condition)
+        {
+           el.second=ind;
+           if(el.first==src)src_ind=ind;
+           if(el.first==dst)dst_ind=ind;
+
+           ++ind;
+        }
+
+        std::vector<vec_t> fls(flights);
+
+        for (auto &vec: fls)
+        {
+            vec[0]=cities_by_condition[vec[0]];
+            vec[1]=cities_by_condition[vec[1]];
+        }
+
+        cities_by_condition.clear();
+
+        auto lmbd_compare=[](const vec_t &a, const vec_t &b){return a[0]<b[0];};
+
+        std::sort(fls.begin(), fls.end(), lmbd_compare);
+
         const int never_city=-1;//to avoid dependense on the cities number
         std::vector<int> visitors(n, never_city);
-        std::vector<vec_t> fls(flights);
-        auto lmbd_compare=[](const vec_t &a, const vec_t &b){return a[0]<b[0];};
-        std::sort(fls.begin(), fls.end(), lmbd_compare);
 
         smrt_vec_pr_t smart_fls;
         smart_fls.reserve(n);
@@ -55,6 +87,9 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
             if(eq_rng_pr.second==smrt_vit_end)break;
             smrt_vit=eq_rng_pr.second;
         }
+
+        fls.clear();
+
         for(auto &sbv:smart_fls)
         std::sort(sbv.begin(), sbv.end(), [](const pr_t &a, const pr_t &b){return a.second<b.second;});
 
@@ -68,7 +103,7 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
                 vec_pr_t::iterator it_vec_begin;//iterates among candidates to be the next one
             };
 
-            arg init_arg{src, tmp, never_city, smart_fls[src].begin()};
+            arg init_arg{src_ind, tmp, never_city, smart_fls[src_ind].begin()};
 
             std::stack<arg> args;//city id, previous visitor id
             args.push(init_arg);
@@ -101,7 +136,7 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
                                 continue;
                        }
 
-                       if(args.top().city_from==src){
+                       if(args.top().city_from==src_ind){
                          visitors=vec_t(n, never_city);//move operation =
                          tmp=0;
                             sits_count=0;
@@ -119,7 +154,7 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
                         continue;
              }
 
-            if(it_vec_begin->first==dst){
+            if(it_vec_begin->first==dst_ind){
                 int probably=tmp+price;
                 result=probably<result?probably:result;
                 ++args.top().it_vec_begin;//go right to find longer but chipper variant
@@ -140,4 +175,3 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
     return result==INT_MAX?-1:result;
     }
 };
-
