@@ -2,7 +2,10 @@
 #include <stack>
 #include <utility>
 #include <algorithm>
+#include <unordered_set>
 #include <unordered_map>
+
+namespace sol_simple_struct{
 
 class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 {
@@ -30,37 +33,41 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
     {
         int src_ind=src, dst_ind=dst;
 
+        std::vector<vec_t> fls(flights);
+
+        auto lmbd_compare=[](const vec_t &a, const vec_t &b){return a[0]<b[0];};
+
         std::unordered_map<int, int, std::hash<int>> cities_by_condition(n);
 
-        for(const auto &subv:flights)
+//create map for reindex cities from
+        int ind=0;
+        for(const auto &subv:fls)
         {
-            cities_by_condition.insert({subv[0], 0} );
-            cities_by_condition.insert({subv[1], 0} );
+            if(cities_by_condition.insert({subv[0],  ind}).second) ++ind;
+        }
+        for(const auto &subv:fls)
+        {
+            if(cities_by_condition.insert({subv[1],  ind}).second) ++ind;
         }
 
-        int ind=0;
+        if(cities_by_condition.count(src)==0)return -1;
+        if(cities_by_condition.count(dst)==0)return -1;
+
         for(auto &el:cities_by_condition)
         {
-           el.second=ind;
-           if(el.first==src)src_ind=ind;
-           if(el.first==dst)dst_ind=ind;
-
-           ++ind;
-        }
-
-        std::vector<vec_t> fls(flights);
+           if(el.first==src)src_ind=el.second;
+           if(el.first==dst)dst_ind=el.second;
+        }        
 
         for (auto &vec: fls)
         {
             vec[0]=cities_by_condition[vec[0]];
             vec[1]=cities_by_condition[vec[1]];
-        }
+        }      
 
         cities_by_condition.clear();
 
-        auto lmbd_compare=[](const vec_t &a, const vec_t &b){return a[0]<b[0];};
-
-        std::sort(fls.begin(), fls.end(), lmbd_compare);
+        std::sort(fls.begin(), fls.end(), lmbd_compare);              
 
         const int never_city=-1;//to avoid dependense on the cities number
         std::vector<int> visitors(n, never_city);
@@ -109,7 +116,7 @@ int findCheapestPrice(const int& n, const std::vector<vec_t>& flights, const int
             args.push(init_arg);
 
         while(true)
-        {
+        {           
                    while( !args.empty() && (args.top().it_vec_begin==smart_fls[args.top().city_from].end()) )//pop off all inaccessible ones
                    {
                        int city_from_to_pop= args.top().city_from;
