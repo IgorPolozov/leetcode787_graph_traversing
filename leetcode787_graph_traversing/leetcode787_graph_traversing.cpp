@@ -5,8 +5,6 @@
 #include <unordered_set>
 #include <unordered_map>
 
-namespace sol_simple_struct{
-
 class Solution//leetcode 787 task: https://leetcode.com/problems/cheapest-flights-within-k-stops/description/
 {
 public:    
