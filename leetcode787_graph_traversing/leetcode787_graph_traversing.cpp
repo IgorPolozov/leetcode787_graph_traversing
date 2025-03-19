@@ -3,9 +3,6 @@
 #include <unordered_set>
 #include <stack>
 #include <utility>//std::pair
-//#include "node.h"
-//#include "vector_flights.h"
-//#include"MyRandom.h"
 
 using ui_t=int;
 struct node
